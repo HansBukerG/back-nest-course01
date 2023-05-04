@@ -9,7 +9,14 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { CarsService } from './cars.service';
+import { CreateCarDto } from './dtos/create-car.dto';
 
+// @UsePipes(
+//   new ValidationPipe({
+//     whitelist: true,
+//     forbidNonWhitelisted: true,
+//   }),
+// )
 @Controller('cars')
 export class CarsController {
   constructor(private readonly carsService: CarsService) {}
@@ -35,8 +42,8 @@ export class CarsController {
   }
 
   @Post()
-  createCar(@Body() body: any) {
-    const { brand, model } = body;
+  createCar(@Body() createCarDto: CreateCarDto) {
+    const { brand, model } = createCarDto;
     console.log(
       `Request for createCar controller with data ${brand} and ${model}`,
     );
@@ -52,7 +59,7 @@ export class CarsController {
   }
 
   @Patch(':id')
-  patchCar(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
+  patchCar(@Param('id', ParseUUIDPipe) id: string, @Body() body: CreateCarDto) {
     const { brand, model } = body;
     const updatedCar = this.carsService.modifyCar(id, brand, model);
     const response = {
